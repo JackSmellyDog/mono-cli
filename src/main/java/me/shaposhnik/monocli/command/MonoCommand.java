@@ -18,8 +18,6 @@ public class MonoCommand implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
-    System.out.println("Mono!");
     return 0;
   }
-
 }
