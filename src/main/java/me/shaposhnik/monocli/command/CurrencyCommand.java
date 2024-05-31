@@ -1,7 +1,7 @@
 package me.shaposhnik.monocli.command;
 
 import java.util.concurrent.Callable;
-import me.shaposhnik.monocli.integration.client.MonoClient;
+import me.shaposhnik.monocli.mono.client.MonoPublicClient;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 
@@ -9,9 +9,9 @@ import picocli.CommandLine.Command;
 @Command(name = "currency")
 public class CurrencyCommand implements Callable<Integer> {
 
-  private final MonoClient client;
+  private final MonoPublicClient client;
 
-  public CurrencyCommand(MonoClient client) {
+  public CurrencyCommand(MonoPublicClient client) {
     this.client = client;
   }
 

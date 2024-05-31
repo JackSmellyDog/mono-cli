@@ -1,8 +1,8 @@
-package me.shaposhnik.monocli.integration.dto;
+package me.shaposhnik.monocli.mono.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
-import me.shaposhnik.monocli.integration.deserializer.Iso4217CurrencyDeserializer;
+import me.shaposhnik.monocli.mono.deserializer.Iso4217CurrencyDeserializer;
 
 public record Account(
     String id,

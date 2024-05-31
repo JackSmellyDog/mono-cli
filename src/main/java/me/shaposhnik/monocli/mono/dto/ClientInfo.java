@@ -1,4 +1,4 @@
-package me.shaposhnik.monocli.integration.dto;
+package me.shaposhnik.monocli.mono.dto;
 
 import java.util.List;
 

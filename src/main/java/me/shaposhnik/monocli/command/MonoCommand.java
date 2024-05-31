@@ -17,7 +17,7 @@ import picocli.CommandLine.Command;
 public class MonoCommand implements Callable<Integer> {
 
   @Override
-  public Integer call() throws Exception {
+  public Integer call() {
     return 0;
   }
 }

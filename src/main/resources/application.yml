@@ -4,3 +4,6 @@ spring:
     banner-mode: off
   application:
     name: mono-cli
+mono:
+  base-url: https://api.monobank.ua
+  x-token: ${MONO_TOKEN:}

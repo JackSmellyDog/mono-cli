@@ -1,4 +1,4 @@
-package me.shaposhnik.monocli.integration.deserializer;
+package me.shaposhnik.monocli.mono.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
