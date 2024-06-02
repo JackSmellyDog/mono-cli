@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 public class MonoCliApplication {
 
   public static void main(String[] args) {
+    // todo: to configuration
     new SpringApplicationBuilder(MonoCliApplication.class)
         .web(WebApplicationType.NONE)
         .run(args);

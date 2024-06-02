@@ -1,23 +1,21 @@
 package me.shaposhnik.monocli.command;
 
 import java.util.concurrent.Callable;
-import me.shaposhnik.monocli.mono.client.MonoPublicClient;
+import lombok.RequiredArgsConstructor;
+import me.shaposhnik.monocli.mono.MonoService;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 
 @Component
 @Command(name = "currency")
+@RequiredArgsConstructor
 public class CurrencyCommand implements Callable<Integer> {
 
-  private final MonoPublicClient client;
-
-  public CurrencyCommand(MonoPublicClient client) {
-    this.client = client;
-  }
+  private final MonoService monoService;
 
   @Override
   public Integer call() throws Exception {
-    client.getCurrencies().forEach(System.out::println);
+    monoService.getCurrencies().forEach(System.out::println);
 
     return 0;
   }
