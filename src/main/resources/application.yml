@@ -2,6 +2,7 @@ spring:
   main:
     log-startup-info: false
     banner-mode: off
+    web-application-type: none
   application:
     name: mono-cli
 mono:
