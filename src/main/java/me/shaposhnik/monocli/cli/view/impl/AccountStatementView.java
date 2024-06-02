@@ -3,12 +3,13 @@ package me.shaposhnik.monocli.cli.view.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import me.shaposhnik.monocli.cli.view.AbstractCommandLineView;
-import me.shaposhnik.monocli.mono.dto.Currency;
 import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
+import me.shaposhnik.monocli.mono.dto.Transaction;
 
-public class CurrenciesView extends AbstractCommandLineView<List<Currency>> {
+public class AccountStatementView extends AbstractCommandLineView<List<Transaction>> {
 
-  public CurrenciesView(MonoApiResponse<List<Currency>> response, ObjectMapper objectMapper) {
+  public AccountStatementView(MonoApiResponse<List<Transaction>> response,
+                              ObjectMapper objectMapper) {
     super(response, objectMapper);
   }
 
