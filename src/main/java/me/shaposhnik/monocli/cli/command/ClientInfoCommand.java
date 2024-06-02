@@ -1,4 +1,4 @@
-package me.shaposhnik.monocli.command;
+package me.shaposhnik.monocli.cli.command;
 
 import java.util.concurrent.Callable;
 import lombok.RequiredArgsConstructor;

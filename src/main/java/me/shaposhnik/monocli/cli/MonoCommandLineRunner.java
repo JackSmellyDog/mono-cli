@@ -1,6 +1,6 @@
-package me.shaposhnik.monocli.runner;
+package me.shaposhnik.monocli.cli;
 
-import me.shaposhnik.monocli.command.MonoCommand;
+import me.shaposhnik.monocli.cli.command.MonoCommand;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.stereotype.Component;

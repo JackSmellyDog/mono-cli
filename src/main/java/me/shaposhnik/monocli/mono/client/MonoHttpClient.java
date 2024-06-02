@@ -2,18 +2,28 @@ package me.shaposhnik.monocli.mono.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionLikeType;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import me.shaposhnik.monocli.mono.MonoProperties;
 import me.shaposhnik.monocli.mono.dto.ClientInfo;
 import me.shaposhnik.monocli.mono.dto.Currency;
 import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
 import me.shaposhnik.monocli.mono.dto.Transaction;
+import me.shaposhnik.monocli.mono.exception.MonoException;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriTemplate;
 
 @Component
 public class MonoHttpClient {
+  private static final String X_TOKEN = "X-Token";
   private final RestClient restClient;
   private final MonoProperties properties;
   private final ObjectMapper objectMapper;
@@ -27,49 +37,63 @@ public class MonoHttpClient {
   }
 
   public MonoApiResponse<List<Currency>> getCurrencies() {
-    String nativeBody = restClient.get()
-        .uri(properties.endpoints().currency())
-        .retrieve()
-        .body(String.class);
+    URI uri = URI.create(properties.endpoints().currency());
+    String nativeBody = retrieveBodyAsString(uri);
 
-    try {
-      List<Currency> currencies = objectMapper.readValue(nativeBody, new TypeReference<>() {
-      });
-      return new MonoApiResponse<>(nativeBody, currencies);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
+    return mapToListResponse(nativeBody, Currency.class);
   }
 
   public MonoApiResponse<ClientInfo> getClientInfo() {
-    String nativeBody = restClient.get()
-        .uri(properties.endpoints().clientInfo())
-        .header("X-Token", properties.xToken())
-        .retrieve()
-        .body(String.class);
+    URI uri = URI.create(properties.endpoints().clientInfo());
+    String nativeBody = retrieveBodyAsString(uri, properties.xToken());
 
-    try {
-      var clientInfo = objectMapper.readValue(nativeBody, ClientInfo.class);
-      return new MonoApiResponse<>(nativeBody, clientInfo);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
+    return mapToResponse(nativeBody, ClientInfo.class);
   }
 
   public MonoApiResponse<List<Transaction>> getTransactions(String account, String from,
                                                             String to) {
-    String nativeBody = restClient.get()
-        .uri(properties.endpoints().statement(), account, from, to)
-        .header("X-Token", properties.xToken())
-        .retrieve()
-        .body(String.class);
+    URI uri = new UriTemplate(properties.endpoints().statement()).expand(account, from, to);
+    String nativeBody = retrieveBodyAsString(uri, properties.xToken());
 
+    return this.mapToListResponse(nativeBody, Transaction.class);
+  }
+
+  private String retrieveBodyAsString(URI uri, String token) {
+    return restClient.get()
+        .uri(uri)
+        .headers(httpHeaders -> Optional.ofNullable(token)
+            .ifPresent(value -> httpHeaders.add(X_TOKEN, value)))
+        .retrieve()
+        .onStatus(HttpStatusCode::is4xxClientError, (req, res) -> {
+          throw new MonoException("4xxClientError");
+        })
+        .onStatus(HttpStatusCode::is5xxServerError, (req, res) -> {
+          throw new MonoException("is5xxServerError");
+        })
+        .body(String.class);
+  }
+
+  private String retrieveBodyAsString(URI uri) {
+    return retrieveBodyAsString(uri, null);
+  }
+
+  private <T> MonoApiResponse<T> mapToResponse(String nativeBody, Class<T> tClass) {
     try {
-      List<Transaction> transactions = objectMapper.readValue(nativeBody, new TypeReference<>() {
-      });
-      return new MonoApiResponse<>(nativeBody, transactions);
+      T body = objectMapper.readValue(nativeBody, tClass);
+      return new MonoApiResponse<>(nativeBody, body);
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new MonoException(e);
+    }
+  }
+
+  private <T> MonoApiResponse<List<T>> mapToListResponse(String nativeBody, Class<T> tClass) {
+    try {
+      CollectionType collectionType = TypeFactory.defaultInstance()
+          .constructCollectionType(List.class, tClass);
+      List<T> body = objectMapper.readValue(nativeBody, collectionType);
+      return new MonoApiResponse<>(nativeBody, body);
+    } catch (JsonProcessingException e) {
+      throw new MonoException(e);
     }
   }
 
