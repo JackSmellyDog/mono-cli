@@ -1,10 +1,9 @@
 package me.shaposhnik.monocli.cli.command;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.concurrent.Callable;
 import lombok.RequiredArgsConstructor;
+import me.shaposhnik.monocli.cli.view.CommandLineViewFactory;
 import me.shaposhnik.monocli.cli.view.ConsoleViewUtils;
-import me.shaposhnik.monocli.cli.view.impl.AccountStatementView;
 import me.shaposhnik.monocli.mono.MonoService;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
@@ -16,8 +15,7 @@ import picocli.CommandLine.Option;
 public class AccountStatementCommand implements Callable<Integer> {
 
   private final MonoService monoService;
-  private final ObjectMapper objectMapper;
-
+  private final CommandLineViewFactory viewFactory;
   @Option(names = {"--account", "-a"})
   private String account;
 
@@ -30,7 +28,7 @@ public class AccountStatementCommand implements Callable<Integer> {
   @Override
   public Integer call() throws Exception {
     var transactions = monoService.getTransactions(account, from, to);
-    var view = new AccountStatementView(transactions, objectMapper);
+    var view = viewFactory.createAccountStatementView(transactions);
 
     ConsoleViewUtils.printLine(view.toJson());
     ConsoleViewUtils.printLine(view.toNative());
