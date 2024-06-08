@@ -5,5 +5,5 @@ public interface CommandLineView {
 
   String toJson();
 
-  String toTable();
+  String toViewable();
 }

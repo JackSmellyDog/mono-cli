@@ -19,6 +19,8 @@ repositories {
 dependencies {
     implementation "info.picocli:picocli-spring-boot-starter:${picocli_version}"
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'io.bretty', name: 'console-table-builder', version: '1.2'
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.15.4'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "info.picocli:picocli-codegen:${picocli_version}"

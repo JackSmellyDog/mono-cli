@@ -34,6 +34,7 @@ public class AccountStatementCommand implements Callable<Integer> {
 
     ConsoleViewUtils.printLine(view.toJson());
     ConsoleViewUtils.printLine(view.toNative());
+    ConsoleViewUtils.printLine(view.toViewable());
 
     return 0;
   }
