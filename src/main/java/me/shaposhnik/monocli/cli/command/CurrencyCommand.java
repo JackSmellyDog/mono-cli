@@ -1,30 +1,29 @@
 package me.shaposhnik.monocli.cli.command;
 
-import java.util.concurrent.Callable;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import me.shaposhnik.monocli.cli.view.CommandLineView;
 import me.shaposhnik.monocli.cli.view.CommandLineViewFactory;
-import me.shaposhnik.monocli.cli.view.ConsoleViewUtils;
 import me.shaposhnik.monocli.mono.MonoService;
+import me.shaposhnik.monocli.mono.dto.Currency;
+import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 
 @Component
 @Command(name = "currency")
-@RequiredArgsConstructor
-public class CurrencyCommand implements Callable<Integer> {
+public class CurrencyCommand extends AbstractMonoApiCommand<List<Currency>> {
 
-  private final MonoService monoService;
-  private final CommandLineViewFactory viewFactory;
+  public CurrencyCommand(MonoService service, CommandLineViewFactory viewFactory) {
+    super(service, viewFactory);
+  }
 
   @Override
-  public Integer call() throws Exception {
-    var currencies = monoService.getCurrencies();
-    var view = viewFactory.createCurrencyView(currencies);
+  protected CommandLineView createView(MonoApiResponse<List<Currency>> response) {
+    return viewFactory.createCurrencyView(response);
+  }
 
-    ConsoleViewUtils.printLine(view.toJson());
-    ConsoleViewUtils.printLine(view.toNative());
-    ConsoleViewUtils.printLine(view.toViewable());
-
-    return 0;
+  @Override
+  protected MonoApiResponse<List<Currency>> retrieveResponse() {
+    return service.getCurrencies();
   }
 }

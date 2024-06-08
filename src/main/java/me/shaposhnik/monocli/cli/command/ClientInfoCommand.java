@@ -1,30 +1,28 @@
 package me.shaposhnik.monocli.cli.command;
 
-import java.util.concurrent.Callable;
-import lombok.RequiredArgsConstructor;
+import me.shaposhnik.monocli.cli.view.CommandLineView;
 import me.shaposhnik.monocli.cli.view.CommandLineViewFactory;
-import me.shaposhnik.monocli.cli.view.ConsoleViewUtils;
 import me.shaposhnik.monocli.mono.MonoService;
+import me.shaposhnik.monocli.mono.dto.ClientInfo;
+import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 
 @Component
 @Command(name = "info")
-@RequiredArgsConstructor
-public class ClientInfoCommand implements Callable<Integer> {
+public class ClientInfoCommand extends AbstractMonoApiCommand<ClientInfo> {
 
-  private final MonoService monoService;
-  private final CommandLineViewFactory viewFactory;
+  public ClientInfoCommand(MonoService service, CommandLineViewFactory viewFactory) {
+    super(service, viewFactory);
+  }
 
   @Override
-  public Integer call() throws Exception {
-    var clientInfo = monoService.getClientInfo();
-    var view = viewFactory.createUserInfoView(clientInfo);
+  protected CommandLineView createView(MonoApiResponse<ClientInfo> response) {
+    return viewFactory.createUserInfoView(response);
+  }
 
-    ConsoleViewUtils.printLine(view.toJson());
-    ConsoleViewUtils.printLine(view.toNative());
-    ConsoleViewUtils.printLine(view.toViewable());
-
-    return 0;
+  @Override
+  protected MonoApiResponse<ClientInfo> retrieveResponse() {
+    return service.getClientInfo();
   }
 }

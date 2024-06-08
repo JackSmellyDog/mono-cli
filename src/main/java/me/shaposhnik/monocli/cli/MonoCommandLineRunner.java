@@ -20,8 +20,10 @@ public class MonoCommandLineRunner implements CommandLineRunner, ExitCodeGenerat
   }
 
   @Override
-  public void run(String... args) throws Exception {
-    exitCode = new CommandLine(monoCommand, factory).execute(args);
+  public void run(String... args) {
+    exitCode = new CommandLine(monoCommand, factory)
+        .setCaseInsensitiveEnumValuesAllowed(true)
+        .execute(args);
   }
 
   @Override

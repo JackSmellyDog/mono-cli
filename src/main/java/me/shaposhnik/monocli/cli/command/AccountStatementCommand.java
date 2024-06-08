@@ -1,22 +1,20 @@
 package me.shaposhnik.monocli.cli.command;
 
-import java.util.concurrent.Callable;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import me.shaposhnik.monocli.cli.view.CommandLineView;
 import me.shaposhnik.monocli.cli.view.CommandLineViewFactory;
-import me.shaposhnik.monocli.cli.view.ConsoleViewUtils;
 import me.shaposhnik.monocli.mono.MonoService;
+import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
+import me.shaposhnik.monocli.mono.dto.Transaction;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Component
 @Command(name = "statement")
-@RequiredArgsConstructor
-public class AccountStatementCommand implements Callable<Integer> {
+public class AccountStatementCommand extends AbstractMonoApiCommand<List<Transaction>> {
 
-  private final MonoService monoService;
-  private final CommandLineViewFactory viewFactory;
-  @Option(names = {"--account", "-a"})
+  @Option(names = {"--account", "-a"} , defaultValue = "0")
   private String account;
 
   @Option(names = {"--from", "-f"})
@@ -25,15 +23,17 @@ public class AccountStatementCommand implements Callable<Integer> {
   @Option(names = {"--to", "-t"})
   private String to;
 
+  public AccountStatementCommand(MonoService service, CommandLineViewFactory viewFactory) {
+    super(service, viewFactory);
+  }
+
   @Override
-  public Integer call() throws Exception {
-    var transactions = monoService.getTransactions(account, from, to);
-    var view = viewFactory.createAccountStatementView(transactions);
+  protected CommandLineView createView(MonoApiResponse<List<Transaction>> response) {
+    return viewFactory.createAccountStatementView(response);
+  }
 
-    ConsoleViewUtils.printLine(view.toJson());
-    ConsoleViewUtils.printLine(view.toNative());
-    ConsoleViewUtils.printLine(view.toViewable());
-
-    return 0;
+  @Override
+  protected MonoApiResponse<List<Transaction>> retrieveResponse() {
+    return service.getTransactions(account, from, to);
   }
 }
