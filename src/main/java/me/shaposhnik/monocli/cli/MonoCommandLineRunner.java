@@ -1,5 +1,6 @@
 package me.shaposhnik.monocli.cli;
 
+import lombok.RequiredArgsConstructor;
 import me.shaposhnik.monocli.cli.command.MonoCommand;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
@@ -8,16 +9,12 @@ import picocli.CommandLine;
 import picocli.CommandLine.IFactory;
 
 @Component
+@RequiredArgsConstructor
 public class MonoCommandLineRunner implements CommandLineRunner, ExitCodeGenerator {
 
   private final MonoCommand monoCommand;
   private final IFactory factory;
   private int exitCode;
-
-  public MonoCommandLineRunner(MonoCommand monoCommand, IFactory factory) {
-    this.monoCommand = monoCommand;
-    this.factory = factory;
-  }
 
   @Override
   public void run(String... args) {

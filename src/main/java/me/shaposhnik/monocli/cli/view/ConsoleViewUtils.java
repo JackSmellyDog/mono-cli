@@ -17,8 +17,8 @@ public class ConsoleViewUtils {
     return Color.RED.colorize(text);
   }
 
-  public static String makeGreen(String text) {
-    return Color.GREEN.colorize(text);
+  public static String makeYellow(String text) {
+    return Color.YELLOW.colorize(text);
   }
 
   public static <T, R> ColumnDataWithMaxLength getColumnData(List<T> list,
@@ -46,7 +46,9 @@ public class ConsoleViewUtils {
   enum Color {
     RED("\u001B[31m"),
 
-    GREEN("\u001B[32m");
+    GREEN("\u001B[32m"),
+
+    YELLOW("\u001B[33m");
 
     private final String code;
 

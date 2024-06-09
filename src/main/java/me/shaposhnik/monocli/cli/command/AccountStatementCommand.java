@@ -11,13 +11,13 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Component
-@Command(name = "statement")
+@Command(name = "statement", sortOptions = false)
 public class AccountStatementCommand extends AbstractMonoApiCommand<List<Transaction>> {
 
   @Option(names = {"--account", "-a"} , defaultValue = "0")
   private String account;
 
-  @Option(names = {"--from", "-f"})
+  @Option(names = {"--from", "-f"}, required = true)
   private String from;
 
   @Option(names = {"--to", "-t"})
@@ -28,8 +28,9 @@ public class AccountStatementCommand extends AbstractMonoApiCommand<List<Transac
   }
 
   @Override
-  protected CommandLineView createView(MonoApiResponse<List<Transaction>> response) {
-    return viewFactory.createAccountStatementView(response);
+  protected CommandLineView createView(MonoApiResponse<List<Transaction>> response,
+                                       boolean disableWarnings) {
+    return viewFactory.createAccountStatementView(response, !disableWarnings);
   }
 
   @Override

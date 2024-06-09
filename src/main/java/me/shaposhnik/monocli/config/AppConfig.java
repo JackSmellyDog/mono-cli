@@ -22,7 +22,6 @@ public class AppConfig {
         .failOnUnknownProperties(false)
         .featuresToDisable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
         .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-        .indentOutput(true)
         .modules(new JavaTimeModule());
   }
 

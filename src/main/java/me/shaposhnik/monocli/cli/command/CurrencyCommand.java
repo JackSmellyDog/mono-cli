@@ -18,8 +18,9 @@ public class CurrencyCommand extends AbstractMonoApiCommand<List<Currency>> {
   }
 
   @Override
-  protected CommandLineView createView(MonoApiResponse<List<Currency>> response) {
-    return viewFactory.createCurrencyView(response);
+  protected CommandLineView createView(MonoApiResponse<List<Currency>> response,
+                                       boolean disableWarnings) {
+    return viewFactory.createCurrencyView(response, !disableWarnings);
   }
 
   @Override

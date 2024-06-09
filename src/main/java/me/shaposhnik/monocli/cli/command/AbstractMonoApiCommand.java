@@ -21,7 +21,7 @@ public abstract class AbstractMonoApiCommand<T> implements Callable<Integer> {
   @Override
   public Integer call() {
     var response = retrieveResponse();
-    var view = createView(response);
+    var view = createView(response, outputOptions.isDisableWarnings());
 
     switch (outputOptions.getFormatting()) {
       case JSON -> printLine(view.toJson());
@@ -32,7 +32,8 @@ public abstract class AbstractMonoApiCommand<T> implements Callable<Integer> {
     return 0;
   }
 
-  protected abstract CommandLineView createView(MonoApiResponse<T> response);
+  protected abstract CommandLineView createView(MonoApiResponse<T> response,
+                                                boolean disableWarnings);
 
   protected abstract MonoApiResponse<T> retrieveResponse();
 }
