@@ -7,12 +7,21 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.Clock;
+import me.shaposhnik.monocli.mono.dto.ClientInfo;
+import me.shaposhnik.monocli.mono.dto.Currency;
+import me.shaposhnik.monocli.mono.dto.Transaction;
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @Configuration(proxyBeanMethods = false)
+@RegisterReflectionForBinding(classes = {
+    Currency.class,
+    Transaction.class,
+    ClientInfo.class
+})
 public class AppConfig {
 
   @Bean
