@@ -3,7 +3,7 @@ package me.shaposhnik.monocli.cli.command;
 import java.util.List;
 import me.shaposhnik.monocli.cli.view.CommandLineView;
 import me.shaposhnik.monocli.cli.view.CommandLineViewFactory;
-import me.shaposhnik.monocli.mono.MonoService;
+import me.shaposhnik.monocli.mono.client.MonoHttpClient;
 import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
 import me.shaposhnik.monocli.mono.dto.Transaction;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import picocli.CommandLine.Option;
 @Command(name = "statement", sortOptions = false)
 public class AccountStatementCommand extends AbstractMonoApiCommand<List<Transaction>> {
 
-  @Option(names = {"--account", "-a"} , defaultValue = "0")
+  @Option(names = {"--account", "-a"}, defaultValue = "0")
   private String account;
 
   @Option(names = {"--from", "-f"}, required = true)
@@ -23,8 +23,9 @@ public class AccountStatementCommand extends AbstractMonoApiCommand<List<Transac
   @Option(names = {"--to", "-t"})
   private String to;
 
-  public AccountStatementCommand(MonoService service, CommandLineViewFactory viewFactory) {
-    super(service, viewFactory);
+  public AccountStatementCommand(MonoHttpClient monoHttpClient,
+                                 CommandLineViewFactory viewFactory) {
+    super(monoHttpClient, viewFactory);
   }
 
   @Override
@@ -35,6 +36,6 @@ public class AccountStatementCommand extends AbstractMonoApiCommand<List<Transac
 
   @Override
   protected MonoApiResponse<List<Transaction>> retrieveResponse() {
-    return service.getTransactions(account, from, to);
+    return monoHttpClient.getTransactions(account, from, to);
   }
 }

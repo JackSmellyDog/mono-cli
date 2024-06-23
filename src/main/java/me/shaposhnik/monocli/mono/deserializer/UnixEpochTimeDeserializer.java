@@ -14,6 +14,7 @@ public class UnixEpochTimeDeserializer extends JsonDeserializer<LocalDateTime> {
   public LocalDateTime deserialize(JsonParser parser, DeserializationContext deserializationContext)
       throws IOException {
     long seconds = parser.getLongValue();
+    // todo: use global system clock implementation from config
     return LocalDateTime.ofInstant(Instant.ofEpochSecond(seconds), ZoneId.systemDefault());
   }
 }

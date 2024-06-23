@@ -8,35 +8,34 @@ import java.util.Objects;
 
 public record MonoApiResponse<T>(String nativeBody,
                                  T body,
-                                 List<String> errors,
+                                 String error,
                                  List<String> warnings) {
 
   public MonoApiResponse {
-    Objects.requireNonNull(errors);
     Objects.requireNonNull(warnings);
 
-    if (body != null && !errors.isEmpty()) {
-      throw new IllegalArgumentException(
-          "ApiResponse can't have body and errors at the same time.");
+    if (body != null && error != null) {
+      throw new IllegalStateException(
+          "ApiResponse can't have body and error at the same time.");
     }
 
-    if (body == null && errors.isEmpty()) {
-      throw new IllegalArgumentException(
-          "ApiResponse can't have body and errors empty at the same time.");
+    if (body == null && error == null) {
+      throw new IllegalStateException(
+          "ApiResponse can't have body and error empty at the same time.");
     }
   }
 
   public MonoApiResponse(String nativeBody, T body) {
-    this(nativeBody, body, emptyList(), emptyList());
+    this(nativeBody, body, null, emptyList());
   }
 
   public MonoApiResponse(String nativeBody, T body, List<String> warnings) {
-    this(nativeBody, body, emptyList(),
+    this(nativeBody, body, null,
         Objects.requireNonNullElseGet(warnings, Collections::emptyList));
   }
 
-  public MonoApiResponse(List<String> errors) {
-    this(null, null, errors, emptyList());
+  public MonoApiResponse(String error) {
+    this(null, null, error, emptyList());
   }
 
 }
