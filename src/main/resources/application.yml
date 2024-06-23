@@ -12,3 +12,4 @@ mono:
     currency: ${mono.endpoints.base-url}/bank/currency
     client-info: ${mono.endpoints.base-url}/personal/client-info
     statement: ${mono.endpoints.base-url}/personal/statement/{account}/{from}/{to}
+  transaction-limit: 500

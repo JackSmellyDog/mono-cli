@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import me.shaposhnik.monocli.mono.MonoProperties;
@@ -25,6 +26,8 @@ import org.springframework.web.util.UriTemplate;
 @Component
 public class MonoHttpClient {
   private static final String X_TOKEN = "X-Token";
+  private static final String TRANSACTION_LIMIT_WARNING =
+      "Transaction threshold was reached. Some transactions can be lost.";
   private final RestClient restClient;
   private final MonoProperties properties;
   private final ObjectMapper objectMapper;
@@ -40,19 +43,23 @@ public class MonoHttpClient {
   public MonoApiResponse<List<Currency>> getCurrencies() {
     URI uri = URI.create(properties.endpoints().currency());
     ResponseResult result = retrieveBody(uri);
+    if (result.hasError()) {
+      return new MonoApiResponse<>(mapToString(result.error()));
+    }
 
-    return result.hasError()
-        ? new MonoApiResponse<>(mapToString(result.error()))
-        : mapSuccessfulListResponse(result.ok(), Currency.class);
+    List<Currency> currencies = mapSuccessfulListResponse(result.ok(), Currency.class);
+    return new MonoApiResponse<>(result.ok(), currencies);
   }
 
   public MonoApiResponse<ClientInfo> getClientInfo() {
     URI uri = URI.create(properties.endpoints().clientInfo());
     ResponseResult result = retrieveBody(uri, properties.xToken());
+    if (result.hasError()) {
+      return new MonoApiResponse<>(mapToString(result.error()));
+    }
 
-    return result.hasError()
-        ? new MonoApiResponse<>(mapToString(result.error()))
-        : mapSuccessfulResponse(result.ok(), ClientInfo.class);
+    var clientInfo = mapSuccessfulResponse(result.ok(), ClientInfo.class);
+    return new MonoApiResponse<>(result.ok(), clientInfo);
   }
 
   public MonoApiResponse<List<Transaction>> getTransactions(String account, String from,
@@ -60,9 +67,16 @@ public class MonoHttpClient {
     URI uri = new UriTemplate(properties.endpoints().statement()).expand(account, from, to);
     ResponseResult result = retrieveBody(uri, properties.xToken());
 
-    return result.hasError()
-        ? new MonoApiResponse<>(mapToString(result.error()))
-        : mapSuccessfulListResponse(result.ok(), Transaction.class);
+    if (result.hasError()) {
+      return new MonoApiResponse<>(mapToString(result.error()));
+    }
+
+    List<Transaction> transactions = mapSuccessfulListResponse(result.ok(), Transaction.class);
+    List<String> warnings = transactions.size() >= properties.transactionLimit()
+        ? List.of(TRANSACTION_LIMIT_WARNING)
+        : Collections.emptyList();
+
+    return new MonoApiResponse<>(result.ok(), transactions, warnings);
   }
 
   private ResponseResult retrieveBody(URI uri, String token) {
@@ -106,22 +120,20 @@ public class MonoHttpClient {
     return "%d: %s".formatted(error.getStatus(), error.getDetail());
   }
 
-  private <T> MonoApiResponse<T> mapSuccessfulResponse(String nativeBody, Class<T> tClass) {
+  private <T> T mapSuccessfulResponse(String nativeBody, Class<T> tClass) {
     try {
-      T body = objectMapper.readValue(nativeBody, tClass);
-      return new MonoApiResponse<>(nativeBody, body);
+      return objectMapper.readValue(nativeBody, tClass);
     } catch (JsonProcessingException e) {
       throw new MonoException(e);
     }
   }
 
-  private <T> MonoApiResponse<List<T>> mapSuccessfulListResponse(String nativeBody,
-                                                                 Class<T> tClass) {
+  private <T> List<T> mapSuccessfulListResponse(String nativeBody,
+                                                Class<T> tClass) {
     try {
       CollectionType collectionType = TypeFactory.defaultInstance()
           .constructCollectionType(List.class, tClass);
-      List<T> body = objectMapper.readValue(nativeBody, collectionType);
-      return new MonoApiResponse<>(nativeBody, body);
+      return objectMapper.readValue(nativeBody, collectionType);
     } catch (JsonProcessingException e) {
       throw new MonoException(e);
     }
