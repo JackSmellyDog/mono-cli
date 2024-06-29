@@ -8,8 +8,8 @@ import io.bretty.console.table.Table;
 import java.util.List;
 import me.shaposhnik.monocli.cli.view.AbstractCommandLineView;
 import me.shaposhnik.monocli.cli.view.ColumnDataWithMaxLength;
-import me.shaposhnik.monocli.mono.dto.Currency;
-import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
+import me.shaposhnik.monocli.core.Currency;
+import me.shaposhnik.monocli.mono.MonoApiResponse;
 
 public class CurrenciesView extends AbstractCommandLineView<List<Currency>> {
   private static final String CURRENCY_CODE_A = "CURRENCY_CODE_A";

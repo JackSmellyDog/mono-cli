@@ -1,4 +1,4 @@
-package me.shaposhnik.monocli.mono.dto;
+package me.shaposhnik.monocli.mono;
 
 import static java.util.Collections.emptyList;
 

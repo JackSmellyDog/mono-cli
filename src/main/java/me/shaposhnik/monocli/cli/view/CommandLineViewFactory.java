@@ -5,15 +5,11 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import java.util.List;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
-import me.shaposhnik.monocli.cli.view.impl.AccountStatementView;
-import me.shaposhnik.monocli.cli.view.impl.CurrenciesView;
-import me.shaposhnik.monocli.cli.view.impl.UserInfoView;
-import me.shaposhnik.monocli.cli.view.impl.WarningAwareView;
-import me.shaposhnik.monocli.cli.view.impl.ErrorView;
-import me.shaposhnik.monocli.mono.dto.ClientInfo;
-import me.shaposhnik.monocli.mono.dto.Currency;
-import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
-import me.shaposhnik.monocli.mono.dto.Transaction;
+import me.shaposhnik.monocli.cli.view.impl.*;
+import me.shaposhnik.monocli.core.ClientInfo;
+import me.shaposhnik.monocli.core.Currency;
+import me.shaposhnik.monocli.core.Transaction;
+import me.shaposhnik.monocli.mono.MonoApiResponse;
 import org.springframework.stereotype.Component;
 
 @Component

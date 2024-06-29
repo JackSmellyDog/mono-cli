@@ -5,11 +5,9 @@ spring:
     web-application-type: none
   application:
     name: mono-cli
+logging:
+  level:
+    org.springframework: error
 mono:
   x-token: ${MONO_TOKEN:}
-  endpoints:
-    base-url: https://api.monobank.ua
-    currency: ${mono.endpoints.base-url}/bank/currency
-    client-info: ${mono.endpoints.base-url}/personal/client-info
-    statement: ${mono.endpoints.base-url}/personal/statement/{account}/{from}/{to}
   transaction-limit: 500

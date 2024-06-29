@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.bretty.console.table.Table;
 import java.util.List;
 import me.shaposhnik.monocli.cli.view.AbstractCommandLineView;
-import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
-import me.shaposhnik.monocli.mono.dto.Transaction;
+import me.shaposhnik.monocli.core.Transaction;
+import me.shaposhnik.monocli.mono.MonoApiResponse;
 
 public class AccountStatementView extends AbstractCommandLineView<List<Transaction>> {
   private static final String ID = "ID";
@@ -29,7 +29,7 @@ public class AccountStatementView extends AbstractCommandLineView<List<Transacti
   private static final String COUNTER_EDRPOU = "COUNTER_EDRPOU";
   private static final String COUNTER_IBAN = "COUNTER IBAN";
   private static final String COUNTER_NAME = "COUNTER_NAME";
-  
+
   public AccountStatementView(MonoApiResponse<List<Transaction>> response,
                               ObjectMapper objectMapper) {
     super(response, objectMapper);
@@ -97,10 +97,12 @@ public class AccountStatementView extends AbstractCommandLineView<List<Transacti
         COUNTER_EDRPOU.length());
     builder.addColumn(COUNTER_EDRPOU, counterEdrpou.column(), getFormatter(counterEdrpou.length()));
 
-    var counterIban = getColumnData(response.body(), Transaction::counterIban, COUNTER_IBAN.length());
+    var counterIban = getColumnData(response.body(), Transaction::counterIban,
+        COUNTER_IBAN.length());
     builder.addColumn(COUNTER_IBAN, counterIban.column(), getFormatter(counterIban.length()));
 
-    var counterName = getColumnData(response.body(), Transaction::counterName, COUNTER_NAME.length());
+    var counterName = getColumnData(response.body(), Transaction::counterName,
+        COUNTER_NAME.length());
     builder.addColumn(COUNTER_NAME, counterName.column(), getFormatter(counterName.length()));
 
     return builder.build().toString();

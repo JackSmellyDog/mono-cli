@@ -3,7 +3,7 @@ package me.shaposhnik.monocli.cli.view;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
+import me.shaposhnik.monocli.mono.MonoApiResponse;
 
 @RequiredArgsConstructor
 public abstract class AbstractCommandLineView<T> implements CommandLineView {

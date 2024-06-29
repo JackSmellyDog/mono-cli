@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 import me.shaposhnik.monocli.cli.option.OutputOptions;
 import me.shaposhnik.monocli.cli.view.CommandLineView;
 import me.shaposhnik.monocli.cli.view.CommandLineViewFactory;
-import me.shaposhnik.monocli.mono.client.MonoHttpClient;
-import me.shaposhnik.monocli.mono.dto.MonoApiResponse;
+import me.shaposhnik.monocli.mono.MonoApiResponse;
+import me.shaposhnik.monocli.mono.MonoService;
 import picocli.CommandLine.Mixin;
 
 @RequiredArgsConstructor
-public abstract class AbstractMonoApiCommand<T> implements Callable<Integer> {
-  protected final MonoHttpClient monoHttpClient;
+abstract class AbstractMonoApiCommand<T> implements Callable<Integer> {
+  protected final MonoService service;
   protected final CommandLineViewFactory viewFactory;
   @Mixin
   protected final OutputOptions outputOptions = new OutputOptions();
