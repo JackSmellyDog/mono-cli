@@ -7,13 +7,13 @@ import me.shaposhnik.monocli.cli.view.AbstractCommandLineView;
 import me.shaposhnik.monocli.core.ClientInfo;
 import me.shaposhnik.monocli.mono.MonoApiResponse;
 
-public class UserInfoView extends AbstractCommandLineView<ClientInfo> {
+public class ClientInfoView extends AbstractCommandLineView<ClientInfo> {
 
   private final YAMLMapper yamlMapper;
 
-  public UserInfoView(MonoApiResponse<ClientInfo> response,
-                      ObjectMapper objectMapper,
-                      YAMLMapper yamlMapper) {
+  public ClientInfoView(MonoApiResponse<ClientInfo> response,
+                        ObjectMapper objectMapper,
+                        YAMLMapper yamlMapper) {
     super(response, objectMapper);
     this.yamlMapper = yamlMapper;
   }

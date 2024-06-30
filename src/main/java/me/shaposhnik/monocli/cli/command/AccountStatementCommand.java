@@ -12,7 +12,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Component
-@Command(name = "statement", sortOptions = false)
+@Command(name = "statement", aliases = {"transactions", "st", "t"}, sortOptions = false)
 class AccountStatementCommand extends AbstractMonoApiCommand<List<Transaction>> {
 
   @Option(names = {"--account", "-a"}, defaultValue = "0")

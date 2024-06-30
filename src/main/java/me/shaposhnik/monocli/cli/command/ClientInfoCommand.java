@@ -19,7 +19,7 @@ class ClientInfoCommand extends AbstractMonoApiCommand<ClientInfo> {
   @Override
   protected CommandLineView createView(MonoApiResponse<ClientInfo> response,
                                        boolean disableWarnings) {
-    return viewFactory.createUserInfoView(response, !disableWarnings);
+    return viewFactory.createClientInfoView(response, !disableWarnings);
   }
 
   @Override

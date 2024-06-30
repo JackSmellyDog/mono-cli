@@ -18,9 +18,9 @@ public class CommandLineViewFactory {
   private final ObjectMapper objectMapper;
   private final YAMLMapper yamlMapper;
 
-  public CommandLineView createUserInfoView(MonoApiResponse<ClientInfo> response,
-                                            boolean isWarningsAware) {
-    return createView(() -> new UserInfoView(response, objectMapper, yamlMapper),
+  public CommandLineView createClientInfoView(MonoApiResponse<ClientInfo> response,
+                                              boolean isWarningsAware) {
+    return createView(() -> new ClientInfoView(response, objectMapper, yamlMapper),
         response.error(), response.warnings(), isWarningsAware);
   }
 
