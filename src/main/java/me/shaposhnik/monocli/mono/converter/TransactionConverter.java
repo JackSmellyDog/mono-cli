@@ -10,28 +10,29 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class TransactionConverter implements Converter<TransactionDto, Transaction> {
   private final UnixEpochTimeConverter unixEpochTimeConverter;
+  private final Iso4217CurrencyConverter iso4217CurrencyConverter;
 
   @Override
   public Transaction convert(TransactionDto source) {
-    return new Transaction(
-        source.id(),
-        unixEpochTimeConverter.convert(source.time()),
-        source.description(),
-        source.mcc(),
-        source.originalMcc(),
-        source.hold(),
-        source.amount(),
-        source.operationAmount(),
-        source.currencyCode(),
-        source.commissionRate(),
-        source.cashbackAmount(),
-        source.balance(),
-        source.comment(),
-        source.receiptId(),
-        source.invoiceId(),
-        source.counterEdrpou(),
-        source.counterIban(),
-        source.counterName()
-    );
+    return Transaction.builder()
+        .id(source.id())
+        .time(unixEpochTimeConverter.convert(source.time()))
+        .description(source.description())
+        .mcc(source.mcc())
+        .originalMcc(source.originalMcc())
+        .hold(source.hold())
+        .amount(source.amount())
+        .operationAmount(source.operationAmount())
+        .currencyCode(iso4217CurrencyConverter.convert(source.currencyCode()))
+        .commissionRate(source.commissionRate())
+        .cashbackAmount(source.cashbackAmount())
+        .balance(source.balance())
+        .comment(source.comment())
+        .receiptId(source.receiptId())
+        .invoiceId(source.invoiceId())
+        .counterEdrpou(source.counterEdrpou())
+        .counterIban(source.counterIban())
+        .counterName(source.counterName())
+        .build();
   }
 }

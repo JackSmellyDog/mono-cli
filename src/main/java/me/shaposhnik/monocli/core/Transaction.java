@@ -1,7 +1,9 @@
 package me.shaposhnik.monocli.core;
 
 import java.time.LocalDateTime;
+import lombok.Builder;
 
+@Builder
 public record Transaction(
     String id,
     LocalDateTime time,
@@ -11,7 +13,7 @@ public record Transaction(
     Boolean hold,
     Double amount,
     Double operationAmount,
-    Integer currencyCode,
+    String currencyCode,
     Long commissionRate,
     Long cashbackAmount,
     Long balance,

@@ -14,13 +14,13 @@ class ClientInfoConverter implements Converter<ClientInfoDto, ClientInfo> {
 
   @Override
   public ClientInfo convert(ClientInfoDto source) {
-    return new ClientInfo(
-        source.clientId(),
-        source.name(),
-        source.webHookUrl(),
-        source.permissions(),
-        accountConverter.convert(source.accounts()),
-        jarConverter.convert(source.jars())
-    );
+    return ClientInfo.builder()
+        .clientId(source.clientId())
+        .name(source.name())
+        .webHookUrl(source.webHookUrl())
+        .permissions(source.permissions())
+        .accounts(accountConverter.convert(source.accounts()))
+        .jars(jarConverter.convert(source.jars()))
+        .build();
   }
 }

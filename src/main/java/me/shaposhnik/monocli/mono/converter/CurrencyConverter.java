@@ -14,13 +14,13 @@ class CurrencyConverter implements Converter<CurrencyDto, Currency> {
 
   @Override
   public Currency convert(CurrencyDto source) {
-    return new Currency(
-        iso4217CurrencyConverter.convert(source.currencyCodeA()),
-        iso4217CurrencyConverter.convert(source.currencyCodeB()),
-        unixEpochTimeConverter.convert(source.date()),
-        source.rateSell(),
-        source.rateBuy(),
-        source.rateCross()
-    );
+    return Currency.builder()
+        .currencyCodeA(iso4217CurrencyConverter.convert(source.currencyCodeA()))
+        .currencyCodeB(iso4217CurrencyConverter.convert(source.currencyCodeB()))
+        .date(unixEpochTimeConverter.convert(source.date()))
+        .rateSell(source.rateSell())
+        .rateBuy(source.rateBuy())
+        .rateCross(source.rateCross())
+        .build();
   }
 }
